@@ -1,15 +1,15 @@
-import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing'
+import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import {
   Trade,
   TradeDirectionEnum,
   TradeStatusEnum,
   MatchVault,
   PnlTypeEnum,
-} from '~/serverUtils/dbTypes'
-import { IAPIClient } from './IAPIClient'
-import { NetworkEnv } from '~/common'
-import { APIClient as InternalAPIClient } from './internal/apiClient' // Import from internal
-import { DeliverTxResponse } from '@sifchain/sdk'
+} from "../serverUtils/dbTypes";
+import { IAPIClient } from "./IAPIClient";
+import { NetworkEnv } from "../common";
+import { APIClient as InternalAPIClient } from "../internal/apiClient"; // Import from internal
+import { DeliverTxResponse } from "@sifchain/sdk";
 
 /**
  * Wrapper for the internal API client to manage and execute trade operations.
@@ -40,14 +40,14 @@ import { DeliverTxResponse } from '@sifchain/sdk'
  * main();
  */
 export class APIClientWrapper implements IAPIClient {
-  private apiClient: InternalAPIClient
+  private apiClient: InternalAPIClient;
 
   /**
    * Private constructor to initialize the APIClientWrapper.
    * @param apiClient - The internal API client instance.
    */
   private constructor(apiClient: InternalAPIClient) {
-    this.apiClient = apiClient
+    this.apiClient = apiClient;
   }
 
   /**
@@ -60,8 +60,8 @@ export class APIClientWrapper implements IAPIClient {
     wallet: DirectSecp256k1HdWallet,
     network: NetworkEnv
   ): Promise<APIClientWrapper> {
-    const apiClient = await InternalAPIClient.create(wallet, network)
-    return new APIClientWrapper(apiClient)
+    const apiClient = await InternalAPIClient.create(wallet, network);
+    return new APIClientWrapper(apiClient);
   }
 
   /**
@@ -87,7 +87,7 @@ export class APIClientWrapper implements IAPIClient {
     limitPrice: number | null
   ): Promise<DeliverTxResponse | null> {
     return this.apiClient.placeOrder(
-      tokenType as 'atom' | 'uusdc',
+      tokenType as "atom" | "uusdc",
       tokenAmount,
       targetTokenType,
       tradeDirection,
@@ -95,7 +95,7 @@ export class APIClientWrapper implements IAPIClient {
       stopLoss,
       takeProfit,
       limitPrice
-    )
+    );
   }
 
   /**
@@ -104,7 +104,7 @@ export class APIClientWrapper implements IAPIClient {
    * @returns A promise that resolves to the transaction response or null if failed.
    */
   async closeOrder(tradeId: number): Promise<DeliverTxResponse | null> {
-    return this.apiClient.closeOrder(tradeId)
+    return this.apiClient.closeOrder(tradeId);
   }
 
   /**
@@ -113,7 +113,7 @@ export class APIClientWrapper implements IAPIClient {
    * @returns A promise that resolves to the transaction response or null if failed.
    */
   async cancelOrder(tradeId: number): Promise<DeliverTxResponse | null> {
-    return this.apiClient.cancelOrder(tradeId)
+    return this.apiClient.cancelOrder(tradeId);
   }
 
   /**
@@ -122,7 +122,7 @@ export class APIClientWrapper implements IAPIClient {
    * @returns A promise that resolves to the current interest rate.
    */
   async getCurrentInterestRate(targetTokenType: string): Promise<number> {
-    return this.apiClient.getCurrentInterestRate(targetTokenType)
+    return this.apiClient.getCurrentInterestRate(targetTokenType);
   }
 
   /**
@@ -135,7 +135,7 @@ export class APIClientWrapper implements IAPIClient {
     tradeType: TradeDirectionEnum | undefined,
     status: TradeStatusEnum | undefined
   ): Promise<Trade[]> {
-    return this.apiClient.getTrades(tradeType, status)
+    return this.apiClient.getTrades(tradeType, status);
   }
 
   /**
@@ -144,7 +144,7 @@ export class APIClientWrapper implements IAPIClient {
    * @returns A promise that resolves to the trade or null if not found.
    */
   async getTrade(tradeId: string): Promise<Trade | null> {
-    return this.apiClient.getTrade(tradeId)
+    return this.apiClient.getTrade(tradeId);
   }
 
   /**
@@ -153,7 +153,7 @@ export class APIClientWrapper implements IAPIClient {
    * @returns A promise that resolves to the top match vault or null if not found.
    */
   async getTopMatch(collateralType: string): Promise<MatchVault | null> {
-    return this.apiClient.getTopMatch(collateralType as 'atom' | 'uusdc')
+    return this.apiClient.getTopMatch(collateralType as "atom" | "uusdc");
   }
 
   /**
@@ -162,6 +162,6 @@ export class APIClientWrapper implements IAPIClient {
    * @returns A promise that resolves to the PnL value.
    */
   async getPnl(type: string): Promise<number> {
-    return this.apiClient.getPnl(type as PnlTypeEnum)
+    return this.apiClient.getPnl(type as PnlTypeEnum);
   }
 }
