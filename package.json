@@ -1,8 +1,8 @@
 {
-  "name": "sample_npm",
+  "name": "gtk-api",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/monilpat/sample_npm.git",
+  "repository": "https://github.com/monilpat/gtk-api.git",
   "author": "Monil Patel <monilpat@gmail.com>",
   "scripts": {
     "build": "next build"
