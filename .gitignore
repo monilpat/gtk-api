@@ -1,0 +1,17 @@
+# Node modules
+node_modules/
+
+# Build directories
+dist/
+build/
+
+# Internal files
+/src/internal/
+
+# Exclude internal directories and implementation details
+src/utils/
+src/serverUtils/
+src/apiUtils/
+
+.DS_Store
+.env

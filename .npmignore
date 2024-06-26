@@ -1,0 +1,10 @@
+# Internal files
+/src/internal/
+
+# Test files
+/tests/
+
+# Exclude internal directories and implementation details
+src/utils/
+src/serverUtils/
+src/apiUtils/
