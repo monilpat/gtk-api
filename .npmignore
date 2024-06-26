@@ -8,3 +8,5 @@
 src/utils/
 src/serverUtils/
 src/apiUtils/
+src/common/
+src/domains/
