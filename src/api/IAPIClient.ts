@@ -26,7 +26,7 @@ export interface IAPIClient {
     tradeType: TradeDirectionEnum | undefined,
     status: TradeStatusEnum | undefined
   ): Promise<Trade[]>;
-  getTrade(tradeId: string): Promise<Trade | null>;
+  getTrade(tradeId: number): Promise<Trade | null>;
   getTopMatch(collateralType: string): Promise<MatchVault | null>;
   getPnl(type: string): Promise<number>;
 }

@@ -21,7 +21,7 @@ import { DeliverTxResponse } from "@sifchain/sdk";
  *
  * async function main() {
  *   const wallet = await DirectSecp256k1HdWallet.fromMnemonic("your-mnemonic");
- *   const client = await APIClientWrapper.create(wallet, NetworkEnv.TESTNET);
+ *   const client = await APIClientWrapper.create(wallet,'mainnet');
  *
  *   // Place an order
  *   const response = await client.placeOrder(
@@ -126,7 +126,7 @@ export class APIClientWrapper implements IAPIClient {
   }
 
   /**
-   * Retrieves a list of trades.
+   * Retrieves a list of trades. If both are undefined returns all trades for your address.
    * @param tradeType - The type of the trade (LONG or SHORT), if any.
    * @param status - The status of the trade (PENDING, ACTIVE, etc.), if any.
    * @returns A promise that resolves to an array of trades.
@@ -143,7 +143,7 @@ export class APIClientWrapper implements IAPIClient {
    * @param tradeId - The ID of the trade to retrieve.
    * @returns A promise that resolves to the trade or null if not found.
    */
-  async getTrade(tradeId: string): Promise<Trade | null> {
+  async getTrade(tradeId: number): Promise<Trade | null> {
     return this.apiClient.getTrade(tradeId);
   }
 

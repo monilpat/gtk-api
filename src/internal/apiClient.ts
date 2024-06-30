@@ -150,7 +150,7 @@ export class APIClient implements IAPIClient {
   }
 
   async closeOrder(tradeId: number): Promise<DeliverTxResponse | null> {
-    const trade = await this.getTrade(String(tradeId));
+    const trade = await this.getTrade(tradeId);
     if (trade == null) {
       return null;
     }
@@ -160,7 +160,7 @@ export class APIClient implements IAPIClient {
   }
 
   async cancelOrder(tradeId: number): Promise<DeliverTxResponse | null> {
-    const trade = await this.getTrade(String(tradeId));
+    const trade = await this.getTrade(tradeId);
     if (trade == null) {
       return null;
     }
@@ -223,12 +223,10 @@ export class APIClient implements IAPIClient {
     return trades;
   }
 
-  async getTrade(tradeId: string): Promise<Trade | null> {
+  async getTrade(tradeId: number): Promise<Trade | null> {
     const trade = (await (
       await fetchWithRetries(
-        `${DOMAIN}/api/data/trade/get_trade?id=${Number(tradeId)}&address=${
-          this.address
-        }`,
+        `${DOMAIN}/api/data/trade/get_trade?id=${tradeId}&address=${this.address}`,
         {
           headers: {
             "Content-Type": "application/json",
