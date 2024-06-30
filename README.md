@@ -215,12 +215,12 @@ Retrieves the top match for a given collateral type.
 
 ### Returns:
 
-A promise that resolves to the top match vault or null if not found.
+A promise that resolves to the top match greater than or equal to the collateral amount or null if not found.
 
 ### Example:
 
 ```typescript
-const topMatch = await client.getTopMatch("uusdc");
+const topMatch = await client.getTopMatch("uusdc", 10);
 console.log("Top Match:", topMatch);
 ```
 

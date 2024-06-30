@@ -154,14 +154,16 @@ export class APIClientWrapper implements IAPIClient {
   }
 
   /**
-   * Retrieves the top match for a given collateral type.
+   * Retrieves the top match for a given collateral type greater than or equal to the given amount, if it exists
    * @param collateralType - The type of the collateral.
+   * @param collateralTokenAmount - The amount of the collateral.
    * @returns A promise that resolves to the top match vault or null if not found.
    */
   async getTopMatch(
-    collateralType: CollateralTokenType
+    collateralType: CollateralTokenType,
+    collateralTokenAmount: number
   ): Promise<MatchVault | null> {
-    return this.apiClient.getTopMatch(collateralType);
+    return this.apiClient.getTopMatch(collateralType, collateralTokenAmount);
   }
 
   /**

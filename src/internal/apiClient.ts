@@ -12,7 +12,6 @@ import {
 import {
   CollateralTokenType,
   DOMAIN,
-  DydxMarket,
   HEDGE_LIQUIDITY_MULTIPLIER,
   MATCHER_MULTIPLIER,
   TargetTokenType,
@@ -76,7 +75,6 @@ export class APIClient implements IAPIClient {
     );
   }
 
-  // TODO: Get the return types defined + add validations for each + start testing
   async placeOrder(
     tokenType: CollateralTokenType,
     tokenAmount: number,
@@ -123,7 +121,6 @@ export class APIClient implements IAPIClient {
       targetTokenPrice
     );
     if (shouldClose) {
-      // better error message
       return null;
     }
     const collateralTypeRegistryData = await getTokenRegistryEntry(
@@ -178,7 +175,6 @@ export class APIClient implements IAPIClient {
   async getCurrentInterestRate(
     targetTokenType: TargetTokenType
   ): Promise<number> {
-    // TODO: Validate target token type
     return await getEffectiveInterestRateForMarket(targetTokenType);
   }
 
@@ -244,10 +240,9 @@ export class APIClient implements IAPIClient {
   }
 
   async getTopMatch(
-    collateralType: CollateralTokenType
+    collateralType: CollateralTokenType,
+    collateralTokenAmount: number
   ): Promise<MatchVault | null> {
-    // Update the route get the top match
-    const collateralTokenAmount = "1000000000000000000000000000000000000000000";
     const response = await fetchWithRetries(
       `${DOMAIN}/api/data/match/top_match?tokenType=${collateralType}&tokenAmount=${BigNumber(
         collateralTokenAmount
