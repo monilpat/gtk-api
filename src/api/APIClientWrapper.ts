@@ -3,7 +3,6 @@ import {
   Trade,
   TradeDirectionEnum,
   TradeStatusEnum,
-  MatchVault,
   PnlTypeEnum,
 } from "../serverUtils/dbTypes";
 import { IAPIClient } from "./IAPIClient";
@@ -157,12 +156,12 @@ export class APIClientWrapper implements IAPIClient {
    * Retrieves the top match for a given collateral type greater than or equal to the given amount, if it exists
    * @param collateralType - The type of the collateral.
    * @param collateralTokenAmount - The amount of the collateral.
-   * @returns A promise that resolves to the top match vault or null if not found.
+   * @returns A promise that resolves to the top match amount in USD or null if not found.
    */
   async getTopMatch(
     collateralType: CollateralTokenType,
     collateralTokenAmount: number
-  ): Promise<MatchVault | null> {
+  ): Promise<number | null> {
     return this.apiClient.getTopMatch(collateralType, collateralTokenAmount);
   }
 

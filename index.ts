@@ -2,12 +2,11 @@
 export { APIClientWrapper } from "./src/api/APIClientWrapper";
 export type { IAPIClient } from "./src/api/IAPIClient";
 export {
+  TargetTokenType,
+  CollateralTokenType,
   PnlTypeEnum,
   TradeDirectionEnum,
   TradeStatusEnum,
-} from "./src/serverUtils/dbTypes";
-export {
-  TargetTokenType,
-  CollateralTokenType,
-} from "./src/utils/constants/constants";
+  Trade,
+} from "./src/api/types";
 export { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";

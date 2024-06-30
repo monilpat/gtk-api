@@ -207,11 +207,12 @@ console.log("Get Trade:", tradeDetails);
 
 ## getTopMatch
 
-Retrieves the top match for a given collateral type.
+Retrieves the top match amount for a given collateral type in USD if it exists
 
 ### Parameters:
 
 - collateralType (string): The type of the collateral.
+- collateralAmount (number): The amount of collateral that are looking to trade against
 
 ### Returns:
 

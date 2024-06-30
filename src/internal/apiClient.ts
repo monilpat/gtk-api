@@ -242,7 +242,7 @@ export class APIClient implements IAPIClient {
   async getTopMatch(
     collateralType: CollateralTokenType,
     collateralTokenAmount: number
-  ): Promise<MatchVault | null> {
+  ): Promise<number | null> {
     const response = await fetchWithRetries(
       `${DOMAIN}/api/data/match/top_match?tokenType=${collateralType}&tokenAmount=${BigNumber(
         collateralTokenAmount
@@ -261,7 +261,9 @@ export class APIClient implements IAPIClient {
     if (match == null) {
       return null;
     }
-    return match;
+    return BigNumber(match.tokenAmount)
+      .minus(match.encumberedTokenAmount)
+      .toNumber();
   }
 
   async getPnl(type: PnlTypeEnum): Promise<number> {

@@ -4,7 +4,6 @@ import {
   Trade,
   TradeDirectionEnum,
   TradeStatusEnum,
-  MatchVault,
 } from "../serverUtils/dbTypes";
 import {
   CollateralTokenType,
@@ -34,6 +33,6 @@ export interface IAPIClient {
   getTopMatch(
     collateralType: CollateralTokenType,
     collateralTokenAmount: number
-  ): Promise<MatchVault | null>;
+  ): Promise<number | null>;
   getPnl(type: string): Promise<number>;
 }
