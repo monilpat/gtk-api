@@ -3,6 +3,7 @@ import {
   PnlTypeEnum,
   TradeDirectionEnum,
   TradeStatusEnum,
+  TargetTokenType,
 } from "gtk-api";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 
@@ -20,7 +21,7 @@ export async function main() {
   console.log("APIClientWrapper:", client);
   // Call placeOrder method
   const trade = await client.placeOrder(
-    "uusdc", // tokenType
+    "uusdc", // collateralTokenType
     0.00001, // tokenAmount
     "btc", // targetTokenType
     TradeDirectionEnum.LONG, // tradeDirection

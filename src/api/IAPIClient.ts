@@ -6,12 +6,16 @@ import {
   TradeStatusEnum,
   MatchVault,
 } from "../serverUtils/dbTypes";
+import {
+  CollateralTokenType,
+  TargetTokenType,
+} from "../utils/constants/constants";
 
 export interface IAPIClient {
   placeOrder(
-    tokenType: string,
+    tokenType: CollateralTokenType,
     tokenAmount: number,
-    targetTokenType: string,
+    targetTokenType: TargetTokenType,
     tradeDirection: TradeDirectionEnum,
     leverage: number,
     stopLoss: number | null,
@@ -21,12 +25,12 @@ export interface IAPIClient {
 
   closeOrder(tradeId: number): Promise<DeliverTxResponse | null>;
   cancelOrder(tradeId: number): Promise<DeliverTxResponse | null>;
-  getCurrentInterestRate(targetTokenType: string): Promise<number>;
+  getCurrentInterestRate(targetTokenType: TargetTokenType): Promise<number>;
   getTrades(
     tradeType: TradeDirectionEnum | undefined,
     status: TradeStatusEnum | undefined
   ): Promise<Trade[]>;
   getTrade(tradeId: number): Promise<Trade | null>;
-  getTopMatch(collateralType: string): Promise<MatchVault | null>;
+  getTopMatch(collateralType: CollateralTokenType): Promise<MatchVault | null>;
   getPnl(type: string): Promise<number>;
 }

@@ -22,6 +22,7 @@ npm install gtk-api
 
 Example Usage of APIClientWrapper
 The following example demonstrates how to use the APIClientWrapper to interact with the API.
+Note you will need to be on VPN if you are NORAM based
 
 ```typescript
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";

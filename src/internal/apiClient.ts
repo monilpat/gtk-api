@@ -10,10 +10,12 @@ import {
   getTokenRegistryEntry,
 } from "../serverUtils/serverUtils";
 import {
+  CollateralTokenType,
   DOMAIN,
   DydxMarket,
   HEDGE_LIQUIDITY_MULTIPLIER,
   MATCHER_MULTIPLIER,
+  TargetTokenType,
   tokenToLeverage,
   tokenToMarket,
 } from "../utils/constants/constants";
@@ -76,9 +78,9 @@ export class APIClient implements IAPIClient {
 
   // TODO: Get the return types defined + add validations for each + start testing
   async placeOrder(
-    tokenType: "atom" | "uusdc",
+    tokenType: CollateralTokenType,
     tokenAmount: number,
-    targetTokenType: string,
+    targetTokenType: TargetTokenType,
     tradeDirection: TradeDirectionEnum,
     leverage: number,
     stopLoss: number | null,
@@ -172,8 +174,10 @@ export class APIClient implements IAPIClient {
     console.log("txn", txn);
     return txn;
   }
-  // Need to be on VPN if in US to access
-  async getCurrentInterestRate(targetTokenType: string): Promise<number> {
+
+  async getCurrentInterestRate(
+    targetTokenType: TargetTokenType
+  ): Promise<number> {
     // TODO: Validate target token type
     return await getEffectiveInterestRateForMarket(targetTokenType);
   }
@@ -240,7 +244,7 @@ export class APIClient implements IAPIClient {
   }
 
   async getTopMatch(
-    collateralType: "atom" | "uusdc"
+    collateralType: CollateralTokenType
   ): Promise<MatchVault | null> {
     // Update the route get the top match
     const collateralTokenAmount = "1000000000000000000000000000000000000000000";

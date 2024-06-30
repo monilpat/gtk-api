@@ -6,3 +6,7 @@ export {
   TradeDirectionEnum,
   TradeStatusEnum,
 } from "./src/serverUtils/dbTypes";
+export {
+  TargetTokenType,
+  CollateralTokenType,
+} from "./src/utils/constants/constants";

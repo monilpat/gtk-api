@@ -10,6 +10,10 @@ import { IAPIClient } from "./IAPIClient";
 import { NetworkEnv } from "../common";
 import { APIClient as InternalAPIClient } from "../internal/apiClient"; // Import from internal
 import { DeliverTxResponse } from "@sifchain/sdk";
+import {
+  CollateralTokenType,
+  TargetTokenType,
+} from "../utils/constants/constants";
 
 /**
  * Wrapper for the internal API client to manage and execute trade operations.
@@ -77,9 +81,9 @@ export class APIClientWrapper implements IAPIClient {
    * @returns A promise that resolves to the transaction response or null if failed.
    */
   async placeOrder(
-    tokenType: string,
+    tokenType: CollateralTokenType,
     tokenAmount: number,
-    targetTokenType: string,
+    targetTokenType: TargetTokenType,
     tradeDirection: TradeDirectionEnum,
     leverage: number,
     stopLoss: number | null,
@@ -87,7 +91,7 @@ export class APIClientWrapper implements IAPIClient {
     limitPrice: number | null
   ): Promise<DeliverTxResponse | null> {
     return this.apiClient.placeOrder(
-      tokenType as "atom" | "uusdc",
+      tokenType,
       tokenAmount,
       targetTokenType,
       tradeDirection,
@@ -121,7 +125,9 @@ export class APIClientWrapper implements IAPIClient {
    * @param targetTokenType - The type of the target token.
    * @returns A promise that resolves to the current interest rate.
    */
-  async getCurrentInterestRate(targetTokenType: string): Promise<number> {
+  async getCurrentInterestRate(
+    targetTokenType: TargetTokenType
+  ): Promise<number> {
     return this.apiClient.getCurrentInterestRate(targetTokenType);
   }
 
@@ -152,8 +158,10 @@ export class APIClientWrapper implements IAPIClient {
    * @param collateralType - The type of the collateral.
    * @returns A promise that resolves to the top match vault or null if not found.
    */
-  async getTopMatch(collateralType: string): Promise<MatchVault | null> {
-    return this.apiClient.getTopMatch(collateralType as "atom" | "uusdc");
+  async getTopMatch(
+    collateralType: CollateralTokenType
+  ): Promise<MatchVault | null> {
+    return this.apiClient.getTopMatch(collateralType);
   }
 
   /**
@@ -161,7 +169,7 @@ export class APIClientWrapper implements IAPIClient {
    * @param type - The type of the PnL (REALIZED, UNREALIZED, OVERALL).
    * @returns A promise that resolves to the PnL value.
    */
-  async getPnl(type: string): Promise<number> {
-    return this.apiClient.getPnl(type as PnlTypeEnum);
+  async getPnl(type: PnlTypeEnum): Promise<number> {
+    return this.apiClient.getPnl(type);
   }
 }
