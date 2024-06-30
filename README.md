@@ -76,14 +76,14 @@ Places a new order.
 
 ### Parameters:
 
-tokenType (string): The type of the token to trade.
-tokenAmount (number): The amount of the token to trade.
-targetTokenType (string): The type of the target token.
-tradeDirection (TradeDirectionEnum): The direction of the trade (LONG or SHORT).
-leverage (number): The leverage to use for the trade.
-stopLoss (number | null): The stop loss value, if any.
-takeProfit (number | null): The take profit value, if any.
-limitPrice (number | null): The limit price for the order, if any.
+- tokenType (string): The type of the token to trade.
+- tokenAmount (number): The amount of the token to trade.
+- targetTokenType (string): The type of the target token.
+- tradeDirection (TradeDirectionEnum): The direction of the trade (LONG or SHORT).
+- leverage (number): The leverage to use for the trade.
+- stopLoss (number | null): The stop loss value, if any.
+- takeProfit (number | null): The take profit value, if any.
+- limitPrice (number | null): The limit price for the order, if any.
 
 ### Returns:
 
@@ -91,17 +91,19 @@ A promise that resolves to the transaction response or null if failed.
 
 ### Example:
 
+```typescript
 const response = await client.placeOrder(
-'btc',
-100,
-'uusdc',
-TradeDirectionEnum.LONG,
-2,
-50,
-150,
-null
+  "btc",
+  100,
+  "uusdc",
+  TradeDirectionEnum.LONG,
+  2,
+  50,
+  150,
+  null
 );
 console.log(response);
+```
 
 ## closeOrder
 
@@ -117,8 +119,10 @@ A promise that resolves to the transaction response or null if failed.
 
 ### Example:
 
+```typescript
 const closedTrade = await client.closeOrder(1615);
 console.log("Close Order:", closedTrade);
+```
 
 ## cancelOrder
 
