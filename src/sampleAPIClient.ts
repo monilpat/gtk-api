@@ -21,17 +21,17 @@ export async function main() {
   const client = await APIClientWrapper.create(wallet, network);
   console.log("APIClientWrapper:", client);
   // Call placeOrder method
-  const trade = await client.placeOrder(
-    "uusdc", // collateralTokenType
-    0.00001, // tokenAmount
-    "btc", // targetTokenType
-    TradeDirectionEnum.LONG, // tradeDirection
-    2, // leverage
-    45000, // stopLoss or null
-    70000, // takeProfit or null
-    null // limit_price
-  );
-  console.log("Place Order:", trade);
+  // const trade = await client.placeOrder(
+  //   "uusdc", // collateralTokenType
+  //   0.00001, // tokenAmount
+  //   "btc", // targetTokenType
+  //   TradeDirectionEnum.LONG, // tradeDirection
+  //   2, // leverage
+  //   45000, // stopLoss or null
+  //   70000, // takeProfit or null
+  //   null // limit_price
+  // );
+  // console.log("Place Order:", trade);
 
   // Call closeOrder method
   // const closedTrade = await client.closeOrder(1615); // Use a mock orderId
