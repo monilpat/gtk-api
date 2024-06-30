@@ -1,18 +1,12 @@
-// import {
-//   APIClientWrapper,
-//   PnlTypeEnum,
-//   TradeDirectionEnum,
-//   TradeStatusEnum,
-//   TargetTokenType,
-//   CollateralTokenType,
-// } from "gtk-api";
 import {
   APIClientWrapper,
   PnlTypeEnum,
   TradeDirectionEnum,
   TradeStatusEnum,
-} from "../index";
-import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+  TargetTokenType,
+  CollateralTokenType,
+  DirectSecp256k1HdWallet,
+} from "gtk-api";
 
 export async function main() {
   // Initialize the APIClientWrapper

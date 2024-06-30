@@ -10,3 +10,4 @@ export {
   TargetTokenType,
   CollateralTokenType,
 } from "./src/utils/constants/constants";
+export { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
