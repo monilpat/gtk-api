@@ -66,6 +66,7 @@
     "eventemitter3": "^4.0.7",
     "evm": "^0.2.0",
     "framer-motion": "^7.1.0",
+    "gtk-api": "^1.0.0",
     "immer": "^9.0.19",
     "isomorphic-fetch": "^3.0.0",
     "jose": "^4.15.5",

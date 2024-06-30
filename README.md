@@ -56,8 +56,8 @@ Factory method to create an instance of APIClientWrapper.
 
 ### Parameters:
 
-wallet (DirectSecp256k1HdWallet): The wallet instance for signing transactions.
-network (NetworkEnv): The network environment to connect to.
+- wallet (DirectSecp256k1HdWallet): The wallet instance for signing transactions.
+- network (NetworkEnv): The network environment to connect to.
 
 ### Returns:
 
@@ -111,7 +111,7 @@ Closes an existing order.
 
 ### Parameters:
 
-tradeId (number): The ID of the trade to close.
+- tradeId (number): The ID of the trade to close.
 
 ### Returns:
 
@@ -130,7 +130,7 @@ Cancels an existing order.
 
 ### Parameters:
 
-tradeId (number): The ID of the trade to cancel.
+- tradeId (number): The ID of the trade to cancel.
 
 ### Returns:
 
@@ -149,7 +149,7 @@ Retrieves the current interest rate for a given token.
 
 ### Parameters:
 
-targetTokenType (string): The type of the target token.
+- targetTokenType (string): The type of the target token.
 
 ### Returns:
 
@@ -168,8 +168,8 @@ Retrieves a list of trades. If both are undefined, returns all trades for your a
 
 ### Parameters:
 
-tradeType (TradeDirectionEnum | undefined): The type of the trade (LONG or SHORT), if any.
-status (TradeStatusEnum | undefined): The status of the trade (PENDING, ACTIVE, etc.), if any.
+- tradeType (TradeDirectionEnum | undefined): The type of the trade (LONG or SHORT), if any.
+- status (TradeStatusEnum | undefined): The status of the trade (PENDING, ACTIVE, etc.), if any.
 
 ### Returns:
 
@@ -191,7 +191,7 @@ Retrieves a specific trade by its ID.
 
 ### Parameters:
 
-tradeId (number): The ID of the trade to retrieve.
+- tradeId (number): The ID of the trade to retrieve.
 
 ### Returns:
 
@@ -210,7 +210,7 @@ Retrieves the top match for a given collateral type.
 
 ### Parameters:
 
-collateralType (string): The type of the collateral.
+- collateralType (string): The type of the collateral.
 
 ### Returns:
 
@@ -229,7 +229,7 @@ Retrieves the profit and loss (PnL) for a given type.
 
 ### Parameters:
 
-type (string): The type of the PnL (REALIZED, UNREALIZED, OVERALL).
+- type (string): The type of the PnL (REALIZED, UNREALIZED, OVERALL).
 
 ### Returns:
 
@@ -248,11 +248,11 @@ Below is a full example demonstrating the use of all available methods in APICli
 
 ```typescript
 import {
+  APIClientWrapper,
   PnlTypeEnum,
   TradeDirectionEnum,
   TradeStatusEnum,
-} from "gtk-api/serverUtils/dbTypes";
-import { APIClientWrapper } from "gtk-api";
+} from "gtk-api";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 
 export async function main() {

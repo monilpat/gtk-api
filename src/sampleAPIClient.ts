@@ -1,9 +1,9 @@
 import {
+  APIClientWrapper,
   PnlTypeEnum,
   TradeDirectionEnum,
   TradeStatusEnum,
-} from "./serverUtils/dbTypes";
-import { APIClientWrapper } from "../index"; // Import from index which is the public API entry point
+} from "gtk-api";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 
 export async function main() {
