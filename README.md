@@ -18,54 +18,63 @@ npm install gtk-api
 
 ```
 
-Usage
+# Usage
+
 Example Usage of APIClientWrapper
 The following example demonstrates how to use the APIClientWrapper to interact with the API.
 
-import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
-import { APIClientWrapper } from 'gtk-api';
+```typescript
+import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+import { APIClientWrapper } from "gtk-api";
 
 async function main() {
-const wallet = await DirectSecp256k1HdWallet.fromMnemonic("your-mnemonic");
-const client = await APIClientWrapper.create(wallet, 'mainnet');
+  const wallet = await DirectSecp256k1HdWallet.fromMnemonic("your-mnemonic");
+  const client = await APIClientWrapper.create(wallet, "mainnet");
 
-// Place an order
-const response = await client.placeOrder(
-'btc',
-100,
-'uusdc',
-TradeDirectionEnum.LONG,
-2,
-50,
-150,
-null
-);
-console.log(response);
+  // Place an order
+  const response = await client.placeOrder(
+    "btc",
+    100,
+    "uusdc",
+    TradeDirectionEnum.LONG,
+    2,
+    50,
+    150,
+    null
+  );
+  console.log(response);
 }
 
 main();
+```
 
-API Methods
-APIClientWrapper
-create
+# API Methods
+
+## APIClientWrapper.create
+
 Factory method to create an instance of APIClientWrapper.
 
-Parameters:
+### Parameters:
 
 wallet (DirectSecp256k1HdWallet): The wallet instance for signing transactions.
 network (NetworkEnv): The network environment to connect to.
-Returns:
+
+### Returns:
 
 A promise that resolves to an APIClientWrapper instance.
-Example:
 
+### Example:
+
+```typescript
 const wallet = await DirectSecp256k1HdWallet.fromMnemonic("your-mnemonic");
-const client = await APIClientWrapper.create(wallet, 'mainnet');
+const client = await APIClientWrapper.create(wallet, "mainnet");
+```
 
-placeOrder
+## placeOrder
+
 Places a new order.
 
-Parameters:
+### Parameters:
 
 tokenType (string): The type of the token to trade.
 tokenAmount (number): The amount of the token to trade.
@@ -75,10 +84,12 @@ leverage (number): The leverage to use for the trade.
 stopLoss (number | null): The stop loss value, if any.
 takeProfit (number | null): The take profit value, if any.
 limitPrice (number | null): The limit price for the order, if any.
-Returns:
+
+### Returns:
 
 A promise that resolves to the transaction response or null if failed.
-Example:
+
+### Example:
 
 const response = await client.placeOrder(
 'btc',
@@ -92,154 +103,199 @@ null
 );
 console.log(response);
 
-closeOrder
+## closeOrder
+
 Closes an existing order.
 
-Parameters:
+### Parameters:
 
 tradeId (number): The ID of the trade to close.
-Returns:
+
+### Returns:
 
 A promise that resolves to the transaction response or null if failed.
-Example:
+
+### Example:
 
 const closedTrade = await client.closeOrder(1615);
 console.log("Close Order:", closedTrade);
 
-cancelOrder
+## cancelOrder
+
 Cancels an existing order.
 
-Parameters:
+### Parameters:
 
 tradeId (number): The ID of the trade to cancel.
-Returns:
+
+### Returns:
 
 A promise that resolves to the transaction response or null if failed.
-Example:
 
+### Example:
+
+```typescript
 const cancelledTrade = await client.cancelOrder(1615);
 console.log("Cancel Order:", cancelledTrade);
-getCurrentInterestRate
+```
+
+## getCurrentInterestRate
+
 Retrieves the current interest rate for a given token.
 
-Parameters:
+### Parameters:
 
 targetTokenType (string): The type of the target token.
-Returns:
+
+### Returns:
 
 A promise that resolves to the current interest rate.
-Example:
 
+### Example:
+
+```typescript
 const interestRate = await client.getCurrentInterestRate("btc");
 console.log("Current Interest Rate:", interestRate);
-getTrades
+```
+
+## getTrades
+
 Retrieves a list of trades. If both are undefined, returns all trades for your address.
 
-Parameters:
+### Parameters:
 
 tradeType (TradeDirectionEnum | undefined): The type of the trade (LONG or SHORT), if any.
 status (TradeStatusEnum | undefined): The status of the trade (PENDING, ACTIVE, etc.), if any.
-Returns:
+
+### Returns:
 
 A promise that resolves to an array of trades.
-Example:
 
+### Example:
+
+```typescript
 const trades = await client.getTrades(
-TradeDirectionEnum.LONG,
-TradeStatusEnum.ACTIVE
+  TradeDirectionEnum.LONG,
+  TradeStatusEnum.ACTIVE
 );
 console.log("Get Trades:", trades);
-getTrade
+```
+
+## getTrade
+
 Retrieves a specific trade by its ID.
 
-Parameters:
+### Parameters:
 
 tradeId (number): The ID of the trade to retrieve.
-Returns:
+
+### Returns:
 
 A promise that resolves to the trade or null if not found.
-Example:
 
+### Example:
+
+```typescript
 const tradeDetails = await client.getTrade(123);
 console.log("Get Trade:", tradeDetails);
-getTopMatch
+```
+
+## getTopMatch
+
 Retrieves the top match for a given collateral type.
 
-Parameters:
+### Parameters:
 
 collateralType (string): The type of the collateral.
-Returns:
+
+### Returns:
 
 A promise that resolves to the top match vault or null if not found.
-Example:
 
+### Example:
+
+```typescript
 const topMatch = await client.getTopMatch("uusdc");
 console.log("Top Match:", topMatch);
-getPnl
+```
+
+## getPnl
+
 Retrieves the profit and loss (PnL) for a given type.
 
-Parameters:
+### Parameters:
 
 type (string): The type of the PnL (REALIZED, UNREALIZED, OVERALL).
-Returns:
+
+### Returns:
 
 A promise that resolves to the PnL value.
-Example:
 
+### Example:
+
+```typescript
 const pnl = await client.getPnl(PnlTypeEnum.REALIZED);
 console.log("PnL:", pnl);
-Full Example
+```
+
+## Full Example
+
 Below is a full example demonstrating the use of all available methods in APIClientWrapper.
 
+```typescript
 import {
-PnlTypeEnum,
-TradeDirectionEnum,
-TradeStatusEnum,
+  PnlTypeEnum,
+  TradeDirectionEnum,
+  TradeStatusEnum,
 } from "gtk-api/serverUtils/dbTypes";
 import { APIClientWrapper } from "gtk-api";
-import { NetworkEnv } from "gtk-api/common";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 
 export async function main() {
-const network: NetworkEnv = "mainnet";
-const wallet: DirectSecp256k1HdWallet = await DirectSecp256k1HdWallet.fromMnemonic("mnemonic", {
-prefix: "sif",
-});
-const client = await APIClientWrapper.create(wallet, network);
-console.log("APIClientWrapper:", client);
+  const network = "mainnet";
+  const wallet: DirectSecp256k1HdWallet =
+    await DirectSecp256k1HdWallet.fromMnemonic("mnemonic", {
+      prefix: "sif",
+    });
+  const client = await APIClientWrapper.create(wallet, network);
+  console.log("APIClientWrapper:", client);
 
-const trade = await client.placeOrder(
-"uusdc",
-0.00001,
-"btc",
-TradeDirectionEnum.LONG,
-2,
-45000,
-70000,
-null
-);
-console.log("Place Order:", trade);
+  const trade = await client.placeOrder(
+    "uusdc",
+    0.00001,
+    "btc",
+    TradeDirectionEnum.LONG,
+    2,
+    45000,
+    70000,
+    null
+  );
+  console.log("Place Order:", trade);
 
-const closedTrade = await client.closeOrder(1615);
-console.log("Close Order:", closedTrade);
+  const closedTrade = await client.closeOrder(1615);
+  console.log("Close Order:", closedTrade);
 
-const cancelledTrade = await client.cancelOrder(1615);
-console.log("Cancel Order:", cancelledTrade);
+  const cancelledTrade = await client.cancelOrder(1615);
+  console.log("Cancel Order:", cancelledTrade);
 
-const interestRate = await client.getCurrentInterestRate("btc");
-console.log("Current Interest Rate:", interestRate);
+  const interestRate = await client.getCurrentInterestRate("btc");
+  console.log("Current Interest Rate:", interestRate);
 
-const trades = await client.getTrades(TradeDirectionEnum.LONG, TradeStatusEnum.ACTIVE);
-console.log("Get Trades:", trades);
+  const trades = await client.getTrades(
+    TradeDirectionEnum.LONG,
+    TradeStatusEnum.ACTIVE
+  );
+  console.log("Get Trades:", trades);
 
-const tradeDetails = await client.getTrade(123);
-console.log("Get Trade:", tradeDetails);
+  const tradeDetails = await client.getTrade(123);
+  console.log("Get Trade:", tradeDetails);
 
-const topMatch = await client.getTopMatch("uusdc");
-console.log("Top Match:", topMatch);
+  const topMatch = await client.getTopMatch("uusdc");
+  console.log("Top Match:", topMatch);
 
-const pnl = await client.getPnl(PnlTypeEnum.REALIZED);
-console.log("PnL:", pnl);
+  const pnl = await client.getPnl(PnlTypeEnum.REALIZED);
+  console.log("PnL:", pnl);
 }
 
 main().catch(console.error);
+```

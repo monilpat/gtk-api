@@ -4,13 +4,11 @@ import {
   TradeStatusEnum,
 } from "./serverUtils/dbTypes";
 import { APIClientWrapper } from "../index"; // Import from index which is the public API entry point
-
-import { NetworkEnv } from "./common";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 
 export async function main() {
   // Initialize the APIClientWrapper
-  const network: NetworkEnv = "mainnet"; // Replace with the appropriate network
+  const network = "mainnet"; // Replace with the appropriate network
   const wallet: DirectSecp256k1HdWallet =
     await DirectSecp256k1HdWallet.fromMnemonic(
       "mnemonic", // Replace with the appropriate mnemonic
