@@ -11,7 +11,6 @@ import {
 } from "../serverUtils/serverUtils";
 import {
   DOMAIN,
-  DydxMarket,
   HEDGE_LIQUIDITY_MULTIPLIER,
   MATCHER_MULTIPLIER,
   tokenToLeverage,
@@ -39,13 +38,12 @@ import {
 import { SdkConfig } from "../domains/core/envs";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import nullthrows from "nullthrows";
-
+import { CollateralTokenType, TargetTokenType } from "../api/types";
 export class APIClient implements IAPIClient {
   private wallet: DirectSecp256k1HdWallet;
   private network: NetworkEnv;
   private env: SdkConfig | null = null;
   private address: string | null = null;
-
   constructor(
     wallet: DirectSecp256k1HdWallet,
     address: string,
@@ -57,7 +55,6 @@ export class APIClient implements IAPIClient {
     this.env = env;
     this.address = address;
   }
-
   static async create(
     wallet: DirectSecp256k1HdWallet,
     network: NetworkEnv
@@ -73,12 +70,10 @@ export class APIClient implements IAPIClient {
       env
     );
   }
-
-  // TODO: Get the return types defined + add validations for each + start testing
   async placeOrder(
-    tokenType: "atom" | "uusdc",
+    tokenType: CollateralTokenType,
     tokenAmount: number,
-    targetTokenType: string,
+    targetTokenType: TargetTokenType,
     tradeDirection: TradeDirectionEnum,
     leverage: number,
     stopLoss: number | null,
@@ -121,7 +116,6 @@ export class APIClient implements IAPIClient {
       targetTokenPrice
     );
     if (shouldClose) {
-      // better error message
       return null;
     }
     const collateralTypeRegistryData = await getTokenRegistryEntry(
@@ -148,9 +142,8 @@ export class APIClient implements IAPIClient {
     console.log("txn", txn);
     return txn;
   }
-
   async closeOrder(tradeId: number): Promise<DeliverTxResponse | null> {
-    const trade = await this.getTrade(String(tradeId));
+    const trade = await this.getTrade(tradeId);
     if (trade == null) {
       return null;
     }
@@ -158,9 +151,8 @@ export class APIClient implements IAPIClient {
     console.log("txn", txn);
     return txn;
   }
-
   async cancelOrder(tradeId: number): Promise<DeliverTxResponse | null> {
-    const trade = await this.getTrade(String(tradeId));
+    const trade = await this.getTrade(tradeId);
     if (trade == null) {
       return null;
     }
@@ -172,12 +164,11 @@ export class APIClient implements IAPIClient {
     console.log("txn", txn);
     return txn;
   }
-  // Need to be on VPN if in US to access
-  async getCurrentInterestRate(targetTokenType: string): Promise<number> {
-    // TODO: Validate target token type
+  async getCurrentInterestRate(
+    targetTokenType: TargetTokenType
+  ): Promise<number> {
     return await getEffectiveInterestRateForMarket(targetTokenType);
   }
-
   async getTrades(
     tradeType: TradeDirectionEnum | undefined,
     status: TradeStatusEnum | undefined
@@ -222,13 +213,10 @@ export class APIClient implements IAPIClient {
     }
     return trades;
   }
-
-  async getTrade(tradeId: string): Promise<Trade | null> {
+  async getTrade(tradeId: number): Promise<Trade | null> {
     const trade = (await (
       await fetchWithRetries(
-        `${DOMAIN}/api/data/trade/get_trade?id=${Number(tradeId)}&address=${
-          this.address
-        }`,
+        `${DOMAIN}/api/data/trade/get_trade?id=${tradeId}&address=${this.address}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -240,12 +228,10 @@ export class APIClient implements IAPIClient {
     console.log("trade ", trade);
     return trade;
   }
-
   async getTopMatch(
-    collateralType: "atom" | "uusdc"
-  ): Promise<MatchVault | null> {
-    // Update the route get the top match
-    const collateralTokenAmount = "1000000000000000000000000000000000000000000";
+    collateralType: CollateralTokenType,
+    collateralTokenAmount: number
+  ): Promise<number | null> {
     const response = await fetchWithRetries(
       `${DOMAIN}/api/data/match/top_match?tokenType=${collateralType}&tokenAmount=${BigNumber(
         collateralTokenAmount
@@ -264,7 +250,9 @@ export class APIClient implements IAPIClient {
     if (match == null) {
       return null;
     }
-    return match;
+    return BigNumber(match.tokenAmount)
+      .minus(match.encumberedTokenAmount)
+      .toNumber();
   }
 
   async getPnl(type: PnlTypeEnum): Promise<number> {
@@ -301,7 +289,6 @@ export class APIClient implements IAPIClient {
     }
     return total;
   }
-
   //  // Match Methods
   // depositLiquidity(amount: number): Promise<any> {
   //     /**
@@ -316,7 +303,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to deposit liquidity
   //     return Promise.resolve(); // Replace with actual API call
   // }
-
   // withdrawLiquidity(amount: number): Promise<any> {
   //     /**
   //      * Withdraws liquidity from the match.
@@ -330,7 +316,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to withdraw liquidity
   //     return Promise.resolve(); // Replace with actual API call
   // }
-
   // requestToClose(matchId: string): Promise<any> {
   //     /**
   //      * Requests to close a match.
@@ -344,7 +329,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to request closing a match
   //     return Promise.resolve(); // Replace with actual API call
   // }
-
   // getMatchBalances(matchId: string): Promise<any> {
   //     /**
   //      * Retrieves the balances for a specific match.
@@ -358,7 +342,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to get match balances
   //     return Promise.resolve({}); // Replace with actual API call
   // }
-
   // getMatchTransactionHistory(matchId: string): Promise<any[]> {
   //     /**
   //      * Retrieves the transaction history for a specific match.
@@ -372,7 +355,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to get match transaction history
   //     return Promise.resolve([]); // Replace with actual API call
   // }
-
   // getMatchTrades(matchId: string): Promise<any[]> {
   //     /**
   //      * Retrieves trades for a specific match.
@@ -386,7 +368,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to get match trades
   //     return Promise.resolve([]); // Replace with actual API call
   // }
-
   // getTopPending(): Promise<any[]> {
   //     /**
   //      * Retrieves the top pending items.
@@ -397,7 +378,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to get top pending items
   //     return Promise.resolve([]); // Replace with actual API call
   // }
-
   // // Analytics Methods
   // getTradingVolume(): Promise<number> {
   //     /**
@@ -409,7 +389,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to get trading volume
   //     return Promise.resolve(0); // Replace with actual API call
   // }
-
   // getMatcherAverageAPR(): Promise<number> {
   //     /**
   //      * Retrieves the average annual percentage rate (APR) for matchers.
@@ -420,7 +399,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to get matcher average APR
   //     return Promise.resolve(0); // Replace with actual API call
   // }
-
   // getTotalCapitalBorrowed(): Promise<number> {
   //     /**
   //      * Retrieves the total capital borrowed.
@@ -431,7 +409,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to get total capital borrowed
   //     return Promise.resolve(0); // Replace with actual API call
   // }
-
   // getTotalInterestPaid(): Promise<number> {
   //     /**
   //      * Retrieves the total interest paid.
@@ -453,7 +430,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to get oracle prices
   //     return Promise.resolve({}); // Replace with actual API call
   // }
-
   // // V2 - HEDGE Methods
   // placeOrder(orderDetails: { [key: string]: any }): Promise<any> {
   //     /**
@@ -468,7 +444,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to place a hedge order
   //     return Promise.resolve(); // Replace with actual API call
   // }
-
   // closeOrder(tradeId: string): Promise<any> {
   //     /**
   //      * Closes an open hedge order.
@@ -482,7 +457,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to close a hedge order
   //     return Promise.resolve(); // Replace with actual API call
   // }
-
   // cancelOrder(tradeId: string): Promise<any> {
   //     /**
   //      * Cancels a hedge order.
@@ -496,7 +470,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to cancel a hedge order
   //     return Promise.resolve(); // Replace with actual API call
   // }
-
   // depositDYDX(amount: number): Promise<any> {
   //     /**
   //      * Deposits DYDX into the hedge account.
@@ -510,7 +483,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to deposit DYDX
   //     return Promise.resolve(); // Replace with actual API call
   // }
-
   // withdrawDYDX(amount: number): Promise<any> {
   //     /**
   //      * Withdraws DYDX from the hedge account.
@@ -524,7 +496,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to withdraw DYDX
   //     return Promise.resolve(); // Replace with actual API call
   // }
-
   // transferDYDXToSIF(amount: number): Promise<any> {
   //     /**
   //      * Transfers DYDX to SIF account.
@@ -538,7 +509,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to transfer DYDX to SIF
   //     return Promise.resolve(); // Replace with actual API call
   // }
-
   // transferSIFToDYDX(amount: number): Promise<any> {
   //     /**
   //      * Transfers SIF to DYDX account.
@@ -552,7 +522,6 @@ export class APIClient implements IAPIClient {
   //     // Implementation to transfer SIF to DYDX
   //     return Promise.resolve(); // Replace with actual API call
   // }
-
   // getExecutedTrades(): Promise<any[]> {
   //     /**
   //      * Retrieves the executed hedge trades.
