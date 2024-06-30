@@ -3,7 +3,7 @@ import {
   TradeDirectionEnum,
   TradeStatusEnum,
 } from "./serverUtils/dbTypes";
-import { APIClientWrapper } from "./index"; // Import from index which is the public API entry point
+import { APIClientWrapper } from "../index"; // Import from index which is the public API entry point
 
 import { NetworkEnv } from "./common";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
