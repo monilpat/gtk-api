@@ -7,7 +7,7 @@ import {
   DEFAULT_RETRIES,
   DEFAULT_RETRY_DELAY,
   DEFAULT_TIMEOUT,
-} from "../utils/constants/constants";
+} from "./constants/constants";
 import { createQueryClient } from "@sifchain/sdk";
 import { RegistryEntry } from "@sifchain/sdk/build/typescript/generated/proto/sifnode/tokenregistry/v1/types";
 type RegistryCacheResult = RegistryEntry[] | undefined;

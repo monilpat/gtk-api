@@ -5,9 +5,9 @@ import {
   MATCHER_MULTIPLIER,
   tokenToLeverage,
   tokenToMarket,
-} from "../utils/constants/constants";
+} from "../apiUtils/constants/constants";
 
-import { SdkConfig } from "../domains/core/envs";
+import { SdkConfig } from "../apiUtils/constants";
 
 // unavoidable
 import {

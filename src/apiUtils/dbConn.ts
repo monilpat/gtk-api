@@ -1,10 +1,9 @@
 import { connect, Connection } from "@planetscale/database";
-import { NetworkEnv } from "../common";
 
 export let connection: Connection;
-export let dbConnectionEnv: NetworkEnv | undefined;
+export let dbConnectionEnv: "mainnet" | "testnet" | undefined;
 
-export const createConnection = (env: NetworkEnv | undefined) => {
+export const createConnection = (env: "mainnet" | "testnet" | undefined) => {
   let config: {
     host: string | undefined;
     username: string | undefined;

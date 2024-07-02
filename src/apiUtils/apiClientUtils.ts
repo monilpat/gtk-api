@@ -5,7 +5,7 @@ import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import { getConfig, NetworkEnv, PROFILE_LOOKUP } from "../common";
-import { SdkConfig } from "../domains/core/envs";
+import { SdkConfig } from "./constants";
 import {
   DEFAULT_TRANSACTION_TOKEN_DENOM,
   DydxMarket,
@@ -19,7 +19,7 @@ import {
   TRADER_APY,
   hedgeInterestMultiplier,
   tokenToMarket,
-} from "../utils/constants/constants";
+} from "./constants/constants";
 import { RegistryEntry } from "@sifchain/sdk/build/typescript/generated/proto/sifnode/tokenregistry/v1/types";
 import { createClients, indexerClient, initialized } from "./dydxClients";
 import { IndexerClient } from "@dydxprotocol/v4-client-js";

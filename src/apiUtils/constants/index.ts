@@ -3,16 +3,13 @@ import {
   NetworkChainConfigLookup,
   NetworkEnv,
   NETWORK_ENVS,
-} from "../common";
+} from "../../common";
 import { useEffect, useMemo, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useQuery } from "@tanstack/react-query";
-import { KeplrChainConfig } from "~/common/utils/parseConfig";
-import { getEnvConfig } from "~/utils/clientUtils";
-import {
-  COOKIE_NAME_CUSTOM_PRICE,
-  COOKIE_NAME_SIF_ENV,
-} from "../utils/constants/constants";
+import { KeplrChainConfig } from "../../common/utils/parseConfig";
+import { getEnvConfig } from "../apiClientUtils";
+import { COOKIE_NAME_CUSTOM_PRICE, COOKIE_NAME_SIF_ENV } from "./constants";
 
 export type DexEnvironment = {
   kind: NetworkEnv;
