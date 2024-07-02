@@ -4,8 +4,6 @@ import { DeliverTxResponse } from "@sifchain/sdk";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
-import { getConfig } from "../common";
-import { SdkConfig, NetworkEnv, PROFILE_LOOKUP } from "./constants";
 import {
   DEFAULT_TRANSACTION_TOKEN_DENOM,
   DydxMarket,
@@ -19,7 +17,7 @@ import {
   TRADER_APY,
   hedgeInterestMultiplier,
   tokenToMarket,
-} from "./constants/constants";
+} from "./constants";
 import { RegistryEntry } from "@sifchain/sdk/build/typescript/generated/proto/sifnode/tokenregistry/v1/types";
 import { createClients, indexerClient, initialized } from "./dydxClients";
 import { IndexerClient } from "@dydxprotocol/v4-client-js";
@@ -299,30 +297,6 @@ export const shouldCloseTrade = (
   }
   return { shouldClose: shouldCloseTrade, reason: reason };
 };
-
-const envConfigCache: { [key: string]: SdkConfig } = {};
-export async function getEnvConfig(params: {
-  environment: NetworkEnv;
-}): Promise<SdkConfig> {
-  let envConfig: SdkConfig;
-  if (envConfigCache[params.environment]) {
-    envConfig = envConfigCache[params.environment];
-  } else {
-    const {
-      kind: tag,
-      ethAssetTag,
-      sifAssetTag,
-    } = PROFILE_LOOKUP[params.environment];
-
-    if (typeof tag === "undefined") {
-      throw new Error(`environment "${params.environment}" not found`);
-    }
-    // @ts-ignore: TS2322
-    envConfig = await getConfig(tag, sifAssetTag, ethAssetTag);
-    envConfigCache[params.environment] = envConfig;
-  }
-  return envConfig;
-}
 
 export const getEffectiveInterestRateForMarket = async (
   targetTokenType: string

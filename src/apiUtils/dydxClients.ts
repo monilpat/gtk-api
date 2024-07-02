@@ -8,7 +8,7 @@ import {
   CompositeClient,
   NobleClient,
 } from "@dydxprotocol/v4-client-js";
-import { DYDX_CONFIG } from "./constants/constants";
+import { DYDX_CONFIG } from "./constants";
 
 export let validatorClient: ValidatorClient;
 export let indexerClient: IndexerClient;

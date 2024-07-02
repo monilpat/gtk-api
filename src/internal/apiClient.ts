@@ -1,15 +1,10 @@
-// could hardcode
 import {
   DOMAIN,
   HEDGE_LIQUIDITY_MULTIPLIER,
   MATCHER_MULTIPLIER,
   tokenToLeverage,
   tokenToMarket,
-} from "../apiUtils/constants/constants";
-
-import { SdkConfig } from "../apiUtils/constants";
-
-// unavoidable
+} from "../apiUtils/constants";
 import {
   CollateralTokenType,
   TargetTokenType,
@@ -26,7 +21,6 @@ import {
 } from "../apiUtils/apiUtils";
 import { IAPIClient } from "../api/IAPIClient";
 import {
-  getEnvConfig,
   getPrecisionForToken,
   onCancelTradeRequestAPI,
   onCloseTradeAPI,
@@ -39,8 +33,6 @@ import {
   indexerClient,
   initialized,
 } from "../apiUtils/dydxClients";
-
-// external imports
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import BigNumber from "bignumber.js";
 import nullthrows from "nullthrows";
@@ -49,24 +41,24 @@ import { DeliverTxResponse } from "@sifchain/sdk";
 export class APIClient implements IAPIClient {
   private wallet: DirectSecp256k1HdWallet;
   private network: "mainnet" | "testnet";
-  private env: SdkConfig | null = null;
   private address: string | null = null;
+  private sifRpcUrl: string | null = null;
+
   constructor(
     wallet: DirectSecp256k1HdWallet,
     address: string,
     network: "mainnet" | "testnet",
-    env: SdkConfig
+    sifRpcUrl: string | null
   ) {
+    this.sifRpcUrl = sifRpcUrl;
     this.wallet = wallet;
     this.network = network;
-    this.env = env;
     this.address = address;
   }
   static async create(
     wallet: DirectSecp256k1HdWallet,
     network: "mainnet" | "testnet"
   ): Promise<APIClient> {
-    const env = await getEnvConfig({ environment: network });
     if (!initialized) {
       await createClients(network);
     }
@@ -74,7 +66,7 @@ export class APIClient implements IAPIClient {
       wallet,
       (await wallet.getAccounts())[0].address,
       network,
-      env
+      '',
     );
   }
   async placeOrder(
@@ -127,7 +119,7 @@ export class APIClient implements IAPIClient {
     }
     const collateralTypeRegistryData = await getTokenRegistryEntry(
       tokenType,
-      nullthrows(this?.env?.sifRpcUrl)
+      nullthrows(this?.sifRpcUrl)
     );
     const precision = getPrecisionForToken(collateralTypeRegistryData);
     const txn = await onRequestATradeAPI(
@@ -144,7 +136,7 @@ export class APIClient implements IAPIClient {
         leverage_quantity: String(leverage),
       },
       precision,
-      this.env?.sifRpcUrl!
+      this?.sifRpcUrl!
     );
     console.log("txn", txn);
     return txn;
@@ -154,7 +146,7 @@ export class APIClient implements IAPIClient {
     if (trade == null) {
       return null;
     }
-    const txn = await onCloseTradeAPI(trade, this.wallet, this.env?.sifRpcUrl!);
+    const txn = await onCloseTradeAPI(trade, this.wallet, this?.sifRpcUrl!);
     console.log("txn", txn);
     return txn;
   }
@@ -166,7 +158,7 @@ export class APIClient implements IAPIClient {
     const txn = await onCancelTradeRequestAPI(
       trade,
       this.wallet,
-      this.env?.sifRpcUrl!
+      this?.sifRpcUrl!
     );
     console.log("txn", txn);
     return txn;
