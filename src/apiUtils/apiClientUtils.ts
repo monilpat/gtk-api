@@ -4,8 +4,8 @@ import { DeliverTxResponse } from "@sifchain/sdk";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
-import { getConfig, NetworkEnv, PROFILE_LOOKUP } from "../common";
-import { SdkConfig } from "./constants";
+import { getConfig } from "../common";
+import { SdkConfig, NetworkEnv, PROFILE_LOOKUP } from "./constants";
 import {
   DEFAULT_TRANSACTION_TOKEN_DENOM,
   DydxMarket,

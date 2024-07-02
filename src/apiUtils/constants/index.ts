@@ -1,23 +1,122 @@
-import {
-  IAsset,
-  NetworkChainConfigLookup,
-  NetworkEnv,
-  NETWORK_ENVS,
-} from "../../common";
-import { useEffect, useMemo, useState } from "react";
-import { useCookies } from "react-cookie";
-import { useQuery } from "@tanstack/react-query";
-import { KeplrChainConfig } from "../../common/utils/parseConfig";
-import { getEnvConfig } from "../apiClientUtils";
-import { COOKIE_NAME_CUSTOM_PRICE, COOKIE_NAME_SIF_ENV } from "./constants";
+import { ChainConfig } from "@sifchain/sdk";
 
-export type DexEnvironment = {
-  kind: NetworkEnv;
-  sifnodeUrl: string;
-  vanirUrl: string;
-  registryUrl: string;
+export type NetworkChainConfigLookup = Record<NetworkKind, ChainConfig>;
+
+export type NetworkEnv = "localnet" | "testnet" | "mainnet";
+
+export type KeplrChainConfig = {
+  rest: string;
+  rpc: string;
+  chainId: string;
+  chainName: string;
+  stakeCurrency: {
+    coinDenom: string;
+    coinMinimalDenom: string;
+    coinDecimals: number;
+  };
+  bip44: {
+    coinType: number;
+  };
+  bech32Config: {
+    bech32PrefixAccAddr: string;
+    bech32PrefixAccPub: string;
+    bech32PrefixValAddr: string;
+    bech32PrefixValPub: string;
+    bech32PrefixConsAddr: string;
+    bech32PrefixConsPub: string;
+  };
+  currencies: {
+    coinDenom: string;
+    coinMinimalDenom: string;
+    coinDecimals: number;
+  }[];
+  feeCurrencies: {
+    coinDenom: string;
+    coinMinimalDenom: string;
+    coinDecimals: number;
+  }[];
+  coinType: number;
+  gasPriceStep: {
+    low: number;
+    average: number;
+    high: number;
+  };
 };
 
+export type NetworkKind =
+  | "sifchain"
+  | "ethereum"
+  // The rest... sort by name
+  | "akash"
+  | "band"
+  | "bitsong"
+  | "cerberus"
+  | "chihuahua"
+  | "comdex"
+  | "cosmoshub"
+  | "crypto-org"
+  | "emoney"
+  | "evmos"
+  | "gravity"
+  | "iris"
+  | "ixo"
+  | "juno"
+  | "ki"
+  | "likecoin"
+  | "osmosis"
+  | "persistence"
+  | "regen"
+  | "starname"
+  | "sentinel"
+  | "stargaze"
+  | "secret"
+  | "terra";
+
+export type IAsset = {
+  address?: string;
+  decimals: number;
+  imageUrl?: string;
+  name: string;
+  network: NetworkKind;
+  symbol: string;
+  unitDenom?: string;
+  denom?: string;
+  displaySymbol: string;
+  lowercasePrefixLength?: number;
+  label?: string;
+  hasDarkIcon?: boolean;
+  homeNetwork: NetworkKind;
+  decommissioned?: boolean;
+  decommissionReason?: string;
+};
+type AssetTag = `${NetworkKind}.${NetworkEnv}`;
+
+type EnvProfileConfig = {
+  kind: NetworkEnv;
+  ethAssetTag: AssetTag;
+  sifAssetTag: AssetTag;
+  cosmoshubAssetTag: AssetTag;
+};
+export const PROFILE_LOOKUP: Record<NetworkEnv, EnvProfileConfig> = {
+  mainnet: {
+    kind: "mainnet",
+    ethAssetTag: "ethereum.mainnet",
+    sifAssetTag: "sifchain.mainnet",
+    cosmoshubAssetTag: "cosmoshub.mainnet",
+  },
+  testnet: {
+    kind: "testnet",
+    ethAssetTag: "ethereum.testnet",
+    sifAssetTag: "sifchain.testnet",
+    cosmoshubAssetTag: "cosmoshub.testnet",
+  },
+  localnet: {
+    kind: "localnet",
+    ethAssetTag: "ethereum.localnet",
+    sifAssetTag: "sifchain.localnet",
+    cosmoshubAssetTag: "cosmoshub.testnet",
+  },
+} as const;
 export type SdkConfig =
   | {
       peggyCompatibleCosmosBaseDenoms: Set<string>;
@@ -37,80 +136,3 @@ export type SdkConfig =
       keplrChainConfig: KeplrChainConfig;
     }
   | undefined;
-
-export type ZeroOrOne = "0" | "1";
-
-export function useDexEnvKind(): NetworkEnv {
-  const [{ sif_dex_env }, setCookie] = useCookies([COOKIE_NAME_SIF_ENV]);
-  const [resolvedEnv, setResolvedEnv] = useState<NetworkEnv | null>(null);
-
-  useEffect(() => {
-    const queryString = new URLSearchParams(window.location.search);
-    const envKind = queryString.get("_env");
-    if (
-      envKind &&
-      NETWORK_ENVS.has(envKind as NetworkEnv) &&
-      envKind !== sif_dex_env
-    ) {
-      setCookie(COOKIE_NAME_SIF_ENV, envKind);
-      setResolvedEnv(envKind as NetworkEnv);
-    }
-    if (envKind) {
-      const url = new URL(window.location.href);
-      url.searchParams.delete("_env");
-      window.history.replaceState({}, document.title, url.toString());
-    }
-  }, [setCookie, sif_dex_env]);
-
-  return useMemo(() => {
-    return resolvedEnv ?? sif_dex_env ?? "testnet";
-  }, [resolvedEnv, sif_dex_env]);
-}
-
-export function useCustomPricing() {
-  const [{ sif_custom_price }, setCookie] = useCookies([
-    COOKIE_NAME_CUSTOM_PRICE,
-  ]);
-  const [resolvedCustomPrice, setCustomPrice] = useState<ZeroOrOne | null>(
-    null
-  );
-
-  useEffect(() => {
-    const queryString = new URLSearchParams(window.location.search);
-    const customPrice = queryString.get("_cp");
-    if (
-      customPrice &&
-      (customPrice === "0" || customPrice === "1") &&
-      customPrice !== sif_custom_price
-    ) {
-      setCookie(COOKIE_NAME_CUSTOM_PRICE, customPrice);
-      setCustomPrice(customPrice as ZeroOrOne);
-    }
-    if (customPrice) {
-      const url = new URL(window.location.href);
-      url.searchParams.delete("_cp");
-      window.history.replaceState({}, document.title, url.toString());
-    }
-  }, [setCookie, sif_custom_price]);
-
-  return useMemo(() => {
-    return resolvedCustomPrice ?? sif_custom_price ?? "0";
-  }, [resolvedCustomPrice, sif_custom_price]);
-}
-
-export function useDexEnvironment() {
-  const environment = useDexEnvKind();
-  useCustomPricing();
-
-  return useQuery(
-    ["dex_env", environment],
-    async () => {
-      return await getEnvConfig({ environment });
-    },
-    {
-      staleTime: 3600_000,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-    }
-  );
-}
