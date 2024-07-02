@@ -66,7 +66,7 @@ export class APIClient implements IAPIClient {
       wallet,
       (await wallet.getAccounts())[0].address,
       network,
-      '',
+      network === "testnet" ? "https://proxies.sifchain.finance/api/sifchain-testnet/rpc" : "https://proxies.sifchain.finance/api/sifchain-1/rpc",
     );
   }
   async placeOrder(
