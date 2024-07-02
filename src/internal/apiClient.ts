@@ -1,14 +1,4 @@
-import {
-  MatchVault,
-  PnlTypeEnum,
-  Trade,
-  TradeDirectionEnum,
-  TradeStatusEnum,
-} from "../serverUtils/dbTypes";
-import {
-  fetchWithRetries,
-  getTokenRegistryEntry,
-} from "../serverUtils/serverUtils";
+// could hardcode
 import {
   DOMAIN,
   HEDGE_LIQUIDITY_MULTIPLIER,
@@ -16,38 +6,55 @@ import {
   tokenToLeverage,
   tokenToMarket,
 } from "../utils/constants/constants";
-import { constructCookie } from "../serverUtils/constructCookie";
-import BigNumber from "bignumber.js";
-import { getEffectiveInterestRateForMarket } from "../serverUtils/hedgeUtils";
+
+import { SdkConfig } from "../domains/core/envs";
+
+// unavoidable
 import {
-  createClients,
-  indexerClient,
-  initialized,
-} from "../apiUtils/dydxClients";
-import { NetworkEnv } from "../common";
+  CollateralTokenType,
+  TargetTokenType,
+  MatchVault,
+  PnlTypeEnum,
+  Trade,
+  TradeDirectionEnum,
+  TradeStatusEnum,
+} from "../api/types";
+import {
+  constructCookie,
+  fetchWithRetries,
+  getTokenRegistryEntry,
+} from "../apiUtils/apiUtils";
 import { IAPIClient } from "../api/IAPIClient";
-import { shouldCloseTrade } from "../serverUtils/closeUtils";
-import { DeliverTxResponse } from "@sifchain/sdk";
 import {
   getEnvConfig,
   getPrecisionForToken,
   onCancelTradeRequestAPI,
   onCloseTradeAPI,
   onRequestATradeAPI,
-} from "../utils/clientUtils";
-import { SdkConfig } from "../domains/core/envs";
+  shouldCloseTrade,
+  getEffectiveInterestRateForMarket,
+} from "../apiUtils/apiClientUtils";
+import {
+  createClients,
+  indexerClient,
+  initialized,
+} from "../apiUtils/dydxClients";
+
+// external imports
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+import BigNumber from "bignumber.js";
 import nullthrows from "nullthrows";
-import { CollateralTokenType, TargetTokenType } from "../api/types";
+import { DeliverTxResponse } from "@sifchain/sdk";
+
 export class APIClient implements IAPIClient {
   private wallet: DirectSecp256k1HdWallet;
-  private network: NetworkEnv;
+  private network: "mainnet" | "testnet";
   private env: SdkConfig | null = null;
   private address: string | null = null;
   constructor(
     wallet: DirectSecp256k1HdWallet,
     address: string,
-    network: NetworkEnv,
+    network: "mainnet" | "testnet",
     env: SdkConfig
   ) {
     this.wallet = wallet;
@@ -57,7 +64,7 @@ export class APIClient implements IAPIClient {
   }
   static async create(
     wallet: DirectSecp256k1HdWallet,
-    network: NetworkEnv
+    network: "mainnet" | "testnet"
   ): Promise<APIClient> {
     const env = await getEnvConfig({ environment: network });
     if (!initialized) {

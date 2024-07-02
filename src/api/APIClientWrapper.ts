@@ -1,7 +1,6 @@
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { IAPIClient } from "./IAPIClient";
-import { NetworkEnv } from "../common";
-import { APIClient as InternalAPIClient } from "../internal/apiClient"; // Import from internal
+import { APIClient as InternalAPIClient } from "../internal/apiClient";
 import { DeliverTxResponse } from "@sifchain/sdk";
 import {
   CollateralTokenType,
@@ -57,7 +56,7 @@ export class APIClientWrapper implements IAPIClient {
    */
   static async create(
     wallet: DirectSecp256k1HdWallet,
-    network: NetworkEnv
+    network: "mainnet" | "testnet"
   ): Promise<APIClientWrapper> {
     const apiClient = await InternalAPIClient.create(wallet, network);
     return new APIClientWrapper(apiClient);

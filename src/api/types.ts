@@ -206,3 +206,38 @@ export enum PnlTypeEnum {
   UNREALIZED = "UNREALIZED",
   OVERALL = "OVERALL",
 }
+
+/**
+ * Model MatchVault
+ *
+ */
+export type MatchVault = {
+  id: number;
+  status: MatchStatus;
+  createdAt: Date;
+  matcherAddress: string;
+  tokenType: string;
+  dydxTokenAmount: string | null;
+  tokenAmount: string;
+  encumberedTokenAmount: string;
+  expiryDatetime: Date | null;
+  latestTxnHash: string | null;
+  type: TradeType;
+  network: Network;
+};
+
+export enum MatchStatusEnum {
+  MATCHED = "MATCHED",
+  UNMATCHED = "UNMATCHED",
+  INACTIVE = "INACTIVE",
+}
+
+export enum NetworkEnum {
+  ETHEREUM = "ETHEREUM",
+  SIFCHAIN = "SIFCHAIN",
+}
+
+export type Network = (typeof NetworkEnum)[keyof typeof NetworkEnum];
+
+export type MatchStatus =
+  (typeof MatchStatusEnum)[keyof typeof MatchStatusEnum];
