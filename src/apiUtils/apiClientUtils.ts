@@ -50,7 +50,7 @@ export const onCloseTradeAPI = async (
     const txn = await signAndBroadcastTransaction(
       offlineSigner,
       traderAddress,
-      `${PROCESS.PENDING_TRADE_ADDRESS}`,
+      PROCESS.PENDING_TRADE_ADDRESS,
       DEFAULT_TRANSACTION_TOKEN_DENOM,
       minAmount,
       {
@@ -83,7 +83,7 @@ export const onCancelTradeRequestAPI = async (
     const txn = await signAndBroadcastTransaction(
       offlineSigner,
       traderAddress,
-      `${PROCESS.PENDING_TRADE_ADDRESS}`,
+      PROCESS.PENDING_TRADE_ADDRESS,
       DEFAULT_TRANSACTION_TOKEN_DENOM,
       minAmount,
       {
@@ -167,7 +167,7 @@ export const onRequestATradeAPI = async (
     const txn = await signAndBroadcastTransaction(
       offlineSigner,
       accountAddress,
-      `${PROCESS.PENDING_TRADE_ADDRESS}`,
+      PROCESS.PENDING_TRADE_ADDRESS,
       collateralType,
       collateralAmount,
       {
