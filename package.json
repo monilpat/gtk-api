@@ -1,11 +1,12 @@
 {
   "name": "gtk-api",
   "version": "1.0.8",
-  "main": "index.js",
+  "main": "dist/src/index.js",
   "repository": "https://github.com/monilpat/gtk-api.git",
   "author": "Monil Patel <monilpat@gmail.com>",
   "scripts": {
-    "build": "next build"
+    "build": "tsc",
+    "start": "node dist/src/index.js"
   },
   "dependencies": {
     "@cosmjs/launchpad": "^0.27.1",
