@@ -1,10 +1,6 @@
 # Node modules
 node_modules/
 
-# Build directories
-dist/
-build/
-
 # Exclude internal directories and implementation details
 .DS_Store
 .env
