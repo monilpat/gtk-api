@@ -22,27 +22,6 @@ npm install gtk-api
 
 Clone sample [repo](https://github.com/monilpat/gtk-api-sample) to use the API without having to create any boilerplate
 
-## Installation
-
-```bash
-yarn
-
-```
-
-OR
-
-```bash
-npm
-
-```
-
-Then run yarn/npm start to run tsc and node on the index.ts file. Note you will need to replace the placeholder mnemonic with your mnemonic and uncomment out the lines you want to run!
-
-```bash
-yarn start
-
-```
-
 # Usage
 
 Example Usage of APIClientWrapper
