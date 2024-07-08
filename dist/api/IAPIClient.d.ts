@@ -8,5 +8,7 @@ export interface IAPIClient {
     getTrades(tradeType: TradeDirectionEnum | undefined, status: TradeStatusEnum | undefined): Promise<Trade[]>;
     getTrade(tradeId: number): Promise<Trade | null>;
     getTopMatch(collateralType: CollateralTokenType, collateralTokenAmount: number): Promise<number | null>;
-    getPnl(type: string): Promise<number>;
+    getPnl(type: string): Promise<{
+        [key: string]: number;
+    }>;
 }

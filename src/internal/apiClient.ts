@@ -66,7 +66,9 @@ export class APIClient implements IAPIClient {
       wallet,
       (await wallet.getAccounts())[0].address,
       network,
-      network === "testnet" ? "https://proxies.sifchain.finance/api/sifchain-testnet/rpc" : "https://proxies.sifchain.finance/api/sifchain-1/rpc",
+      network === "testnet"
+        ? "https://proxies.sifchain.finance/api/sifchain-testnet/rpc"
+        : "https://proxies.sifchain.finance/api/sifchain-1/rpc"
     );
   }
   async placeOrder(
@@ -254,40 +256,42 @@ export class APIClient implements IAPIClient {
       .toNumber();
   }
 
-  async getPnl(type: PnlTypeEnum): Promise<number> {
-    let total = 0;
+  async getPnl(type: PnlTypeEnum): Promise<{ [key: string]: number }> {
+    const pnlByCollateralTokenType: { [key: string]: number } = {};
+
     if ([PnlTypeEnum.REALIZED, PnlTypeEnum.OVERALL].includes(type)) {
       const completedTrades = await this.getTrades(
         undefined,
         TradeStatusEnum.COMPLETED
       );
-      total =
-        total +
-        completedTrades.reduce(
-          (acc, trade) =>
-            BigNumber(acc)
-              .plus(trade.pandL ?? 0)
-              .toNumber(),
-          0
-        );
+      completedTrades.forEach((trade) => {
+        const tokenType = trade.collateralTokenType;
+        const pnl = BigNumber(trade.pandL ?? 0).toNumber();
+        if (!pnlByCollateralTokenType[tokenType]) {
+          pnlByCollateralTokenType[tokenType] = 0;
+        }
+        pnlByCollateralTokenType[tokenType] += pnl;
+      });
     }
+
     if ([PnlTypeEnum.UNREALIZED, PnlTypeEnum.OVERALL].includes(type)) {
       const activeTrades = await this.getTrades(
         undefined,
         TradeStatusEnum.ACTIVE
       );
-      total =
-        total +
-        activeTrades.reduce(
-          (acc, trade) =>
-            BigNumber(acc)
-              .plus(trade.pandL ?? 0)
-              .toNumber(),
-          0
-        );
+      activeTrades.forEach((trade) => {
+        const tokenType = trade.collateralTokenType;
+        const pnl = BigNumber(trade.pandL ?? 0).toNumber();
+        if (!pnlByCollateralTokenType[tokenType]) {
+          pnlByCollateralTokenType[tokenType] = 0;
+        }
+        pnlByCollateralTokenType[tokenType] += pnl;
+      });
     }
-    return total;
+
+    return pnlByCollateralTokenType;
   }
+
   //  // Match Methods
   // depositLiquidity(amount: number): Promise<any> {
   //     /**

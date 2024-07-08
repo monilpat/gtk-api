@@ -31,5 +31,5 @@ export interface IAPIClient {
     collateralType: CollateralTokenType,
     collateralTokenAmount: number
   ): Promise<number | null>;
-  getPnl(type: string): Promise<number>;
+  getPnl(type: string): Promise<{ [key: string]: number }>;
 }

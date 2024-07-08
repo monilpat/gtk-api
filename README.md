@@ -74,7 +74,7 @@ const client = await APIClientWrapper.create(wallet, "mainnet");
 
 ## placeOrder
 
-Places a new order.
+Places a new order request and returns the transaction hash of the order request.
 
 ### Parameters:
 
@@ -109,7 +109,7 @@ console.log(response);
 
 ## closeOrder
 
-Closes an existing order.
+Closes an existing order for an existing trade from the same account. Note there is a 15-minute minimum trade open window before a trade can be closed.
 
 ### Parameters:
 
@@ -128,7 +128,7 @@ console.log("Close Order:", closedTrade);
 
 ## cancelOrder
 
-Cancels an existing order.
+Cancels an existing order for an existing trade from the same account.
 
 ### Parameters:
 
@@ -228,7 +228,7 @@ console.log("Top Match:", topMatch);
 
 ## getPnl
 
-Retrieves the profit and loss (PnL) for a given type.
+Retrieves the profit and loss (PnL) for a given type grouped by collateralType
 
 ### Parameters:
 
@@ -236,7 +236,7 @@ Retrieves the profit and loss (PnL) for a given type.
 
 ### Returns:
 
-A promise that resolves to the PnL value.
+A promise that resolves to the PnL value grouped by collateralType
 
 ### Example:
 

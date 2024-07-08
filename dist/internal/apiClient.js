@@ -34,7 +34,9 @@ class APIClient {
             if (!dydxClients_1.initialized) {
                 yield (0, dydxClients_1.createClients)(network);
             }
-            return new APIClient(wallet, (yield wallet.getAccounts())[0].address, network, network === "testnet" ? "https://proxies.sifchain.finance/api/sifchain-testnet/rpc" : "https://proxies.sifchain.finance/api/sifchain-1/rpc");
+            return new APIClient(wallet, (yield wallet.getAccounts())[0].address, network, network === "testnet"
+                ? "https://proxies.sifchain.finance/api/sifchain-testnet/rpc"
+                : "https://proxies.sifchain.finance/api/sifchain-1/rpc");
         });
     }
     placeOrder(tokenType, tokenAmount, targetTokenType, tradeDirection, leverage, stopLoss, takeProfit, limitPrice) {
@@ -155,30 +157,32 @@ class APIClient {
     }
     getPnl(type) {
         return __awaiter(this, void 0, void 0, function* () {
-            let total = 0;
+            const pnlByCollateralTokenType = {};
             if ([types_1.PnlTypeEnum.REALIZED, types_1.PnlTypeEnum.OVERALL].includes(type)) {
                 const completedTrades = yield this.getTrades(undefined, types_1.TradeStatusEnum.COMPLETED);
-                total =
-                    total +
-                        completedTrades.reduce((acc, trade) => {
-                            var _a;
-                            return (0, bignumber_js_1.default)(acc)
-                                .plus((_a = trade.pandL) !== null && _a !== void 0 ? _a : 0)
-                                .toNumber();
-                        }, 0);
+                completedTrades.forEach((trade) => {
+                    var _a;
+                    const tokenType = trade.collateralTokenType;
+                    const pnl = (0, bignumber_js_1.default)((_a = trade.pandL) !== null && _a !== void 0 ? _a : 0).toNumber();
+                    if (!pnlByCollateralTokenType[tokenType]) {
+                        pnlByCollateralTokenType[tokenType] = 0;
+                    }
+                    pnlByCollateralTokenType[tokenType] += pnl;
+                });
             }
             if ([types_1.PnlTypeEnum.UNREALIZED, types_1.PnlTypeEnum.OVERALL].includes(type)) {
                 const activeTrades = yield this.getTrades(undefined, types_1.TradeStatusEnum.ACTIVE);
-                total =
-                    total +
-                        activeTrades.reduce((acc, trade) => {
-                            var _a;
-                            return (0, bignumber_js_1.default)(acc)
-                                .plus((_a = trade.pandL) !== null && _a !== void 0 ? _a : 0)
-                                .toNumber();
-                        }, 0);
+                activeTrades.forEach((trade) => {
+                    var _a;
+                    const tokenType = trade.collateralTokenType;
+                    const pnl = (0, bignumber_js_1.default)((_a = trade.pandL) !== null && _a !== void 0 ? _a : 0).toNumber();
+                    if (!pnlByCollateralTokenType[tokenType]) {
+                        pnlByCollateralTokenType[tokenType] = 0;
+                    }
+                    pnlByCollateralTokenType[tokenType] += pnl;
+                });
             }
-            return total;
+            return pnlByCollateralTokenType;
         });
     }
 }

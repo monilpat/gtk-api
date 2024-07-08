@@ -100,5 +100,7 @@ export declare class APIClientWrapper implements IAPIClient {
      * @param type - The type of the PnL (REALIZED, UNREALIZED, OVERALL).
      * @returns A promise that resolves to the PnL value.
      */
-    getPnl(type: PnlTypeEnum): Promise<number>;
+    getPnl(type: PnlTypeEnum): Promise<{
+        [key: string]: number;
+    }>;
 }
