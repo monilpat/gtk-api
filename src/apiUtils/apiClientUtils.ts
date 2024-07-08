@@ -42,6 +42,11 @@ export const onCloseTradeAPI = async (
   rpcUrl: string
 ): Promise<DeliverTxResponse | null> => {
   const { id, traderAddress } = trade;
+  const sendingAddress = (await offlineSigner.getAccounts())[0]?.address;
+  if (sendingAddress !== traderAddress) {
+    console.error("sending address does not match trader address on trade");
+    return null;
+  }
   const rowanPrecision = 18;
   const minAmount = BigNumber(10)
     .exponentiatedBy(-rowanPrecision)
@@ -75,6 +80,11 @@ export const onCancelTradeRequestAPI = async (
   rpcUrl: string
 ): Promise<DeliverTxResponse | null> => {
   const { id, traderAddress } = trade;
+  const sendingAddress = (await offlineSigner.getAccounts())[0]?.address;
+  if (sendingAddress !== traderAddress) {
+    console.error("sending address does not match trader address on trade");
+    return null;
+  }
   const rowanPrecision = 18;
   const minAmount = BigNumber(10)
     .exponentiatedBy(-rowanPrecision)

@@ -33,7 +33,13 @@ const getPrecisionForToken = (tokenData) => {
 };
 exports.getPrecisionForToken = getPrecisionForToken;
 const onCloseTradeAPI = (trade, offlineSigner, rpcUrl) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { id, traderAddress } = trade;
+    const sendingAddress = (_a = (yield offlineSigner.getAccounts())[0]) === null || _a === void 0 ? void 0 : _a.address;
+    if (sendingAddress !== traderAddress) {
+        console.error("sending address does not match trader address on trade");
+        return null;
+    }
     const rowanPrecision = 18;
     const minAmount = (0, bignumber_js_1.default)(10)
         .exponentiatedBy(-rowanPrecision)
@@ -54,7 +60,13 @@ const onCloseTradeAPI = (trade, offlineSigner, rpcUrl) => __awaiter(void 0, void
 });
 exports.onCloseTradeAPI = onCloseTradeAPI;
 const onCancelTradeRequestAPI = (trade, offlineSigner, rpcUrl) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
     const { id, traderAddress } = trade;
+    const sendingAddress = (_b = (yield offlineSigner.getAccounts())[0]) === null || _b === void 0 ? void 0 : _b.address;
+    if (sendingAddress !== traderAddress) {
+        console.error("sending address does not match trader address on trade");
+        return null;
+    }
     const rowanPrecision = 18;
     const minAmount = (0, bignumber_js_1.default)(10)
         .exponentiatedBy(-rowanPrecision)
